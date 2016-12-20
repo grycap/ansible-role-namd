@@ -1,0 +1,17 @@
+---
+  - name: Install missing dependences in Debian system
+    apt: pkg={{ item }} state=installed
+    with_items: 
+     - build-essential
+     - libcr-dev
+     - mpich2
+     - mpich2-doc
+     - gcc 
+     - g++
+     - csh
+     - tcsh
+     - tcl8.6-dev
+
+
+
+

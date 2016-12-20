@@ -1,0 +1,28 @@
+---
+  - name: Install missing dependences in RedHat system
+    yum: pkg={{ item }} state=installed
+    with_items: 
+     - '"@Development Tools"' 
+     - csh
+     - tcsh
+     - tcl-devel
+
+  - name: Download and untar MPICH(v3.2) source code
+    unarchive:
+      src: http://www.mpich.org/static/downloads/3.2/mpich-3.2.tar.gz
+      dest: /tmp
+      creates: /tmp/mpich-3.2
+      remote_src: yes
+      mode: 0755
+
+  - name: Configure the building directory for MPICH
+    command: ./configure
+    args:
+      chdir: /tmp/mpich-3.2/
+      creates: configure.log
+
+  - name: Building MPICH
+    make:
+      chdir: /tmp/mpich-3.2/
+      target: install
+      creates: build.log
