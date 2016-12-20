@@ -5,83 +5,83 @@
   - name: Download and untar the NAMD_2.11 source code
     unarchive:
       src: http://grid.ct.infn.it/cron_files/NAMD_2.11_Source.tar.gz
-      dest: {{ install_path }}
-      creates: {{ install_path }}/NAMD_2.11_Source/
+      dest: "{{ install_path }}"
+      creates: "{{ install_path }}/NAMD_2.11_Source/"
       remote_src: yes
       mode: 0755
 
   - name: Untar charm-6.7.0 source code
     unarchive:
-      dest: {{ install_path }}/NAMD_2.11_Source/
-      src: {{ install_path }}/NAMD_2.11_Source/charm-6.7.0.tar
-      creates: {{ install_path }}/NAMD_2.11_Source/charm-6.7.0/
+      dest: "{{ install_path }}/NAMD_2.11_Source/"
+      src: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0.tar"
+      creates: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/"
       mode: 0755
 
   - name: Compile charm-6.7.0 libraries with MPI support
     shell:
       env MPICXX=mpicxx ./build charm++ mpi-linux-x86_64 --with-production
     args:
-      chdir: {{ install_path }}/NAMD_2.11_Source/charm-6.7.0/
-      creates: {{ install_path }}/NAMD_2.11_Source/charm-6.7.0/bin
+      chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/"
+      creates: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/bin"
 
   - name: Building
     make:
-      chdir: {{ install_path }}/NAMD_2.11_Source/charm-6.7.0/mpi-linux-x86_64/tests/charm++/megatest
+      chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/mpi-linux-x86_64/tests/charm++/megatest"
       target: pgm
 
   - name: Download and untar FFTW source code
     unarchive:
       src: http://www.ks.uiuc.edu/Research/namd/libraries/fftw-linux-x86_64.tar.gz
-      dest: {{ install_path }}/NAMD_2.11_Source
+      dest: "{{ install_path }}/NAMD_2.11_Source"
       remote_src: yes
       mode: 0755
 
   - name: Rename the linux-x86_64 directory
     command: mv linux-x86_64 fftw
     args:
-      chdir: {{ install_path }}/NAMD_2.11_Source/
+      chdir: "{{ install_path }}/NAMD_2.11_Source/"
 
   - name: Download and untar tcl8.5.9-linux-x86_64.tar.gz
     unarchive:
       src: http://www.ks.uiuc.edu/Research/namd/libraries/tcl8.5.9-linux-x86_64.tar.gz
-      dest: {{ install_path }}/NAMD_2.11_Source
+      dest: "{{ install_path }}/NAMD_2.11_Source"
       remote_src: yes
       mode: 0755
 
   - name: Rename the tcl directory
     command: mv tcl8.5.9-linux-x86_64/ tcl
     args:
-      chdir: {{ install_path }}/NAMD_2.11_Source/
+      chdir: "{{ install_path }}/NAMD_2.11_Source/"
 
   - name: Download and untar tcl8.5.9-linux-x86_64-threaded.tar.gz
     unarchive:
       src: http://www.ks.uiuc.edu/Research/namd/libraries/tcl8.5.9-linux-x86_64-threaded.tar.gz
-      dest: {{ install_path }}/NAMD_2.11_Source
+      dest: "{{ install_path }}/NAMD_2.11_Source"
       remote_src: yes
       mode: 0755
 
   - name: Rename the tcl-threaded directory
     command: mv tcl8.5.9-linux-x86_64-threaded tcl-threaded
     args:
-      chdir: {{ install_path }}/NAMD_2.11_Source/
+      chdir: "{{ install_path }}/NAMD_2.11_Source/"
 
   - name: Edit Make.charm
     replace:
-      dest: {{ install_path }}/NAMD_2.11_Source/Make.charm
+      dest: "{{ install_path }}/NAMD_2.11_Source/Make.charm"
       regexp: '/Projects/namd2/charm-6.7.0'
       replace: '{{ install_path }}/NAMD_2.11_Source'
       backup: yes
 
   - name: Edit arch/Linux-x86_64.fftw
     replace:
-      dest: {{ install_path }}/NAMD_2.11_Source/arch/Linux-x86_64.fftw
+      dest: "{{ install_path }}/NAMD_2.11_Source/arch/Linux-x86_64.fftw"
       regexp: '/Projects/namd2/fftw/linux-x86_64'
       replace: '{{ install_path }}/NAMD_2.11_Source/fftw'
       backup: yes
 
   - name: Edit arch/Linux-x86_64.tcl
     replace:
-      dest: {{ install_path }}/NAMD_2.11_Source/arch/Linux-x86_64.tcl
+      dest: "{{ install_path }}/NAMD_2.11_Source/arch/Linux-x86_64.tcl"
       regexp: '#TCLDIR=/Projects/namd2/tcl/tcl8.5.9-linux-x86_64'
       replace: 'TCLDIR={{ install_path }}/NAMD_2.11_Source/tcl'
       regexp: '/Projects/namd2/tcl/tcl8.5.9-linux-x86_64-threaded'
@@ -90,16 +90,16 @@
   - name: Configure the building directory
     command: ./config Linux-x86_64-g++ --charm-arch mpi-linux-x86_64
     args:
-      chdir: {{ install_path }}/NAMD_2.11_Source/
-      creates: {{ install_path }}/NAMD_2.11_Source/namd_configure.txt
+      chdir: "{{ install_path }}/NAMD_2.11_Source/"
+      creates: "{{ install_path }}/NAMD_2.11_Source/namd_configure.txt"
 
   - name: Building NAMD_2.11
     make:
-      chdir: {{ install_path }}/NAMD_2.11_Source/Linux-x86_64-g++/
+      chdir: "{{ install_path }}/NAMD_2.11_Source/Linux-x86_64-g++/"
       target: all
 
   - name: Testing NAMD_2.11
     shell: ./namd2 src/alanin >> namd_log.txt
     args:
-      chdir: {{ install_path }}/NAMD_2.11_Source/Linux-x86_64-g++/
+      chdir: "{{ install_path }}/NAMD_2.11_Source/Linux-x86_64-g++/"
       creates: namd_log.txt 
