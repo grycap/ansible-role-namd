@@ -25,4 +25,3 @@
     make:
       chdir: /tmp/mpich-3.2/
       target: install
-      creates: build.log
