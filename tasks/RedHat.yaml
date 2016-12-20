@@ -2,7 +2,7 @@
   - name: Install missing dependences in RedHat system
     yum: pkg={{ item }} state=installed
     with_items: 
-     - '"@Development Tools"' 
+     - "@Development Tools"
      - csh
      - tcsh
      - tcl-devel
