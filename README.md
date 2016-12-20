@@ -4,7 +4,7 @@
 NAMD Role
 =======================
 
-This ansible role installs [NAMD](http://www.ks.uiuc.edu/Research/namd/).
+This ansible role installs [NAMD](http://www.ks.uiuc.edu/Research/namd/). A parallel, object-oriented molecular dynamics code designed for high-performance simulation of large biomolecular systems.
 
 Role Variables
 ----------------
