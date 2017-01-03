@@ -8,8 +8,8 @@
      - tcl-devel
      - openmpi
      - openmpi-devel
-   environment:
-    PATH: /usr/lib64/openmpi/bin/:{{ ansible_env.PATH }}
+    environment:
+     PATH: /usr/lib64/openmpi/bin/:{{ ansible_env.PATH }}
 
   - name: Download and untar MPICH(v3.2) source code
     unarchive:
