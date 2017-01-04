@@ -23,6 +23,8 @@
     args:
       chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/"
       creates: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/bin"
+    environment:
+     PATH: /usr/lib64/openmpi/bin/:{{ ansible_env.PATH }}
 
   - name: Building
     make:
