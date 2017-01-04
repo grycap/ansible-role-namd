@@ -8,6 +8,7 @@
      - tcl-devel
      - openmpi
      - openmpi-devel
+     - gcc-c++.x86_64
     environment:
      PATH: /usr/lib64/openmpi/bin/:{{ ansible_env.PATH }}
 
