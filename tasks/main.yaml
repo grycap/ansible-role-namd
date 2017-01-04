@@ -19,12 +19,10 @@
 
   - name: Compile charm-6.7.0 libraries with MPI support
     shell:
-      env MPICXX=mpicxx ./build charm++ mpi-linux-x86_64 --with-production
+      env MPICXX=/usr/lib64/openmpi/bin/mpicxx ./build charm++ mpi-linux-x86_64 --with-production
     args:
       chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/"
       creates: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/bin"
-    environment:
-     PATH: /usr/lib64/openmpi/bin/:{{ ansible_env.PATH }}
 
   - name: Building
     make:
