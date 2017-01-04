@@ -79,13 +79,17 @@
       replace: '{{ install_path }}/NAMD_2.11_Source/fftw'
       backup: yes
 
-  - name: Edit arch/Linux-x86_64.tcl
+  - name: Edit arch/Linux-x86_64.tcl(1)
     replace:
       dest: "{{ install_path }}/NAMD_2.11_Source/arch/Linux-x86_64.tcl"
       regexp: '#TCLDIR=/Projects/namd2/tcl/tcl8.5.9-linux-x86_64'
-      replace: 'TCLDIR={{ install_path }}/NAMD_2.11_Source/tcl'
+      replace: 'TCLDIR=/tmp/NAMD_2.11_Source/tcl'
+
+  - name: Edit arch/Linux-x86_64.tcl(2)
+    replace:
+      dest: "{{ install_path }}/NAMD_2.11_Source/arch/Linux-x86_64.tcl"
       regexp: '/Projects/namd2/tcl/tcl8.5.9-linux-x86_64-threaded'
-      replace: '{{ install_path }}/NAMD_2.11_Source/tcl-threaded'
+      replace: '/tmp/NAMD_2.11_Source/tcl-threaded'
 
   - name: Configure the building directory
     command: ./config Linux-x86_64-g++ --charm-arch mpi-linux-x86_64
