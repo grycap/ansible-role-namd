@@ -24,7 +24,6 @@
     command: ./configure
     args:
       chdir: /tmp/mpich-3.2/
-      creates: configure.log
 
   - name: Building MPICH
     make:

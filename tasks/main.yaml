@@ -64,6 +64,7 @@
     command: mv tcl8.5.9-linux-x86_64-threaded tcl-threaded
     args:
       chdir: "{{ install_path }}/NAMD_2.11_Source/"
+      creates: /tmp/NAMD_2.11_Source/tcl-threaded
 
   - name: Edit Make.charm
     replace:
