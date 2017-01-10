@@ -24,8 +24,11 @@
     command: ./configure
     args:
       chdir: /tmp/mpich-3.2/
+    become: yes
 
   - name: Building MPICH
     make:
       chdir: /tmp/mpich-3.2/
       target: install
+    become: yes
+
