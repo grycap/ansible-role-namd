@@ -12,9 +12,3 @@
      - tcsh
      - tcl8.6-dev
 
-  - name: Compile charm-6.7.0 libraries with MPI support
-    shell:
-      env MPICXX=/usr/bin/mpicxx MPICC=/usr/bin/mpicc ./build charm++ mpi-linux-x86_64 --with-production
-    args:
-      chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/"
-      creates: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/bin"

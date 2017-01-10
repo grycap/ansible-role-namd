@@ -19,6 +19,24 @@
       mode: 0755
     become: yes
 
+  - name: Compile charm-6.7.0 libraries with MPI support
+    shell:
+      env MPICXX=/usr/bin/mpicxx MPICC=/usr/bin/mpicc ./build charm++ mpi-linux-x86_64 --with-production
+    args:
+      chdir: /opt/NAMD_2.11_Source/charm-6.7.0/
+      creates: /opt/NAMD_2.11_Source/charm-6.7.0/bin
+    become: yes
+    when: ansible_os_family == "Debian"
+
+  - name: Compile charm-6.7.0 libraries with MPI support
+    shell:
+      env MPICXX=/usr/local/bin/mpicxx MPICC=/usr/local/bin/mpicc ./build charm++ mpi-linux-x86_64 --with-production
+    args:
+      chdir: /opt/NAMD_2.11_Source/charm-6.7.0/
+      creates: /opt/NAMD_2.11_Source/charm-6.7.0/bin
+    become: yes
+    when: ansible_os_family == "RedHat"
+
   - name: Building
     make:
       chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/mpi-linux-x86_64/tests/charm++/megatest"
