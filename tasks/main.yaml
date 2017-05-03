@@ -60,7 +60,7 @@
     command: mv linux-x86_64 fftw
     args:
       chdir: "{{ install_path }}/NAMD_2.11_Source/"
-      creates: "{ install_path }/NAMD_2.11_Source/fftw"
+      creates: "{{ install_path }}/NAMD_2.11_Source/fftw"
     become: yes
 
   - name: Download and untar tcl8.5.9-linux-x86_64.tar.gz
@@ -89,7 +89,7 @@
     command: mv tcl8.5.9-linux-x86_64-threaded tcl-threaded
     args:
       chdir: "{{ install_path }}/NAMD_2.11_Source/"
-      creates: "{ install_path }/NAMD_2.11_Source/tcl-threaded"
+      creates: "{{ install_path }}/NAMD_2.11_Source/tcl-threaded"
     #become: yes
 
   - name: Edit Make.charm
