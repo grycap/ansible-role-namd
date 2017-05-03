@@ -75,6 +75,7 @@
     command: mv tcl8.5.9-linux-x86_64/ tcl
     args:
       chdir: "{{ install_path }}/NAMD_2.11_Source/"
+      creates: "{{ install_path }}/NAMD_2.11_Source/tcl"
     #become: yes
 
   - name: Download and untar tcl8.5.9-linux-x86_64-threaded.tar.gz
