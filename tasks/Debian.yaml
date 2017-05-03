@@ -12,3 +12,7 @@
      - tcsh
      - tcl8.6-dev
 
+#  - name: Set the application install path in Debian
+#    set_fact:
+#      install_path: "/home/ubuntu"
+

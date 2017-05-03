@@ -12,6 +12,10 @@
     environment:
      PATH: /usr/lib64/openmpi/bin/:{{ ansible_env.PATH }}
 
+#  - name: Set the application install path in RedHat
+#    set_fact:
+#      install_path: "/home/centos"
+
   - name: Download and untar MPICH(v3.2) source code
     unarchive:
       src: http://www.mpich.org/static/downloads/3.2/mpich-3.2.tar.gz
