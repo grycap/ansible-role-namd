@@ -7,3 +7,5 @@
     - name: "Include grycap.namd"
       include_role:
         name: "ansible-role-namd"
+      vars:
+        install_path: "/tmp"
