@@ -24,11 +24,11 @@
     command: ./configure
     args:
       chdir: /tmp/mpich-3.2/
-    become: yes
+      creates: /tmp/mpich-3.2/Makefile
 
   - name: Building MPICH
-    make:
+    command: make install
+    args:
       chdir: /tmp/mpich-3.2/
-      target: install
-    become: yes
+      creates: /usr/local/lib/libmpi.so
 
