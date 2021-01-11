@@ -4,6 +4,6 @@
   become: true
 
   tasks:
-    - name: "Include grycap.ntp"
+    - name: "Include grycap.namd"
       include_role:
-        name: "ansible-role-ntp"
+        name: "ansible-role-namd"
