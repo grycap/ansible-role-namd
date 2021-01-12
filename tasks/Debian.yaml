@@ -3,3 +3,9 @@
     apt:
       pkg: ['build-essential', 'libcr-dev', 'mpich', 'mpich-doc', 'gcc', 'g++', 'csh', 'tcsh', 'tcl8.6-dev']
       state: present
+      update_cache: yes
+      cache_valid_time: 3600
+
+  - name: Set MPI_PATH var
+    set_fact:
+      MPI_PATH: /usr/bin/

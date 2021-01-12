@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  tasks:
+    - name: "Include grycap.namd"
+      include_role:
+        name: "ansible-role-namd"
+      vars:
+        install_path: "/tmp"

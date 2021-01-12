@@ -9,7 +9,6 @@
       creates: "{{ install_path }}/NAMD_2.11_Source/"
       remote_src: yes
       mode: 0755
-    #become: yes
 
   - name: Untar charm-6.7.0 source code
     unarchive:
@@ -17,51 +16,35 @@
       src: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0.tar"
       creates: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/"
       mode: 0755
-    #become: yes
+      remote_src: yes
 
   - name: Compile charm-6.7.0 libraries with MPI support
-    shell:
-      env MPICXX=/usr/bin/mpicxx MPICC=/usr/bin/mpicc ./build charm++ mpi-linux-x86_64 --with-production
+    command:
+      ./build charm++ mpi-linux-x86_64 --with-production
     args:
-      #chdir: /opt/NAMD_2.11_Source/charm-6.7.0/
       chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/"
-      #creates: /opt/NAMD_2.11_Source/charm-6.7.0/bin
       creates: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/bin"
-    #become: yes
-    when: ansible_os_family == "Debian"
-
-  - name: Compile charm-6.7.0 libraries with MPI support
-    shell:
-      env MPICXX=/usr/local/bin/mpicxx MPICC=/usr/local/bin/mpicc ./build charm++ mpi-linux-x86_64 --with-production
-    args:
-      #chdir: /opt/NAMD_2.11_Source/charm-6.7.0/
-      chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/"
-      #creates: /opt/NAMD_2.11_Source/charm-6.7.0/bin
-      creates: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/bin"
-    #become: yes
-    when: ansible_os_family == "RedHat"
+    environment:
+      MPICXX: "{{ MPI_PATH }}/mpicxx"
+      MPICC: "{{ MPI_PATH }}/mpicc"
 
   - name: Building
     make:
       chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/mpi-linux-x86_64/tests/charm++/megatest"
       target: pgm
-    #become: yes
+
+  - name: Create fftw directory
+    file:
+      dest: "{{ install_path }}/NAMD_2.11_Source/fftw"
+      state: directory
 
   - name: Download and untar FFTW source code
     unarchive:
       src: http://www.ks.uiuc.edu/Research/namd/libraries/fftw-linux-x86_64.tar.gz
-      dest: "{{ install_path }}/NAMD_2.11_Source"
-      creates: "{{ install_path }}/NAMD_2.11_Source/linux-x86_64/"
+      dest: "{{ install_path }}/NAMD_2.11_Source/fftw"
+      creates: "{{ install_path }}/NAMD_2.11_Source/linux-x86_64/fftw"
       remote_src: yes
       mode: 0755
-    #become: yes
-
-  - name: Rename the linux-x86_64 directory
-    command: mv linux-x86_64 fftw
-    args:
-      chdir: "{{ install_path }}/NAMD_2.11_Source/"
-      creates: "{{ install_path }}/NAMD_2.11_Source/fftw"
-    become: yes
 
   - name: Download and untar tcl8.5.9-linux-x86_64.tar.gz
     unarchive:
@@ -69,14 +52,12 @@
       dest: "{{ install_path }}/NAMD_2.11_Source"
       remote_src: yes
       mode: 0755
-    #become: yes
 
   - name: Rename the tcl directory
-    command: mv tcl8.5.9-linux-x86_64/ tcl
-    args:
-      chdir: "{{ install_path }}/NAMD_2.11_Source/"
-      creates: "{{ install_path }}/NAMD_2.11_Source/tcl"
-    #become: yes
+    file:
+      src: "{{ install_path }}/NAMD_2.11_Source/tcl8.5.9-linux-x86_64"
+      dest: "{{ install_path }}/NAMD_2.11_Source/tcl"
+      state: link
 
   - name: Download and untar tcl8.5.9-linux-x86_64-threaded.tar.gz
     unarchive:
@@ -84,14 +65,12 @@
       dest: "{{ install_path }}/NAMD_2.11_Source"
       remote_src: yes
       mode: 0755
-    #become: yes
 
   - name: Rename the tcl-threaded directory
-    command: mv tcl8.5.9-linux-x86_64-threaded tcl-threaded
-    args:
-      chdir: "{{ install_path }}/NAMD_2.11_Source/"
-      creates: "{{ install_path }}/NAMD_2.11_Source/tcl-threaded"
-    #become: yes
+    file:
+      src: "{{ install_path }}/NAMD_2.11_Source/tcl8.5.9-linux-x86_64-threaded"
+      dest: "{{ install_path }}/NAMD_2.11_Source/tcl-threaded"
+      state: link
 
   - name: Edit Make.charm
     replace:
@@ -99,49 +78,39 @@
       regexp: '/Projects/namd2/charm-6.7.0'
       replace: '{{ install_path }}/NAMD_2.11_Source'
       backup: yes
-    #become: yes
 
   - name: Edit arch/Linux-x86_64.fftw
     replace:
       dest: "{{ install_path }}/NAMD_2.11_Source/arch/Linux-x86_64.fftw"
       regexp: '/Projects/namd2/fftw/linux-x86_64'
-      replace: '{{ install_path }}/NAMD_2.11_Source/fftw'
+      replace: '{{ install_path }}/NAMD_2.11_Source/fftw/linux-x86_64'
       backup: yes
-    #become: yes
 
   - name: Edit arch/Linux-x86_64.tcl(1)
     replace:
       dest: "{{ install_path }}/NAMD_2.11_Source/arch/Linux-x86_64.tcl"
       regexp: '#TCLDIR=/Projects/namd2/tcl/tcl8.5.9-linux-x86_64'
-      #replace: 'TCLDIR=/tmp/NAMD_2.11_Source/tcl'
       replace: 'TCLDIR={{ install_path }}/NAMD_2.11_Source/tcl'
-    #become: yes
 
   - name: Edit arch/Linux-x86_64.tcl(2)
     replace:
       dest: "{{ install_path }}/NAMD_2.11_Source/arch/Linux-x86_64.tcl"
       regexp: '/Projects/namd2/tcl/tcl8.5.9-linux-x86_64-threaded'
-      #replace: '/tmp/NAMD_2.11_Source/tcl-threaded'
       replace: '{{ install_path }}/NAMD_2.11_Source/tcl-threaded'
-    #become: yes
 
   - name: Configure the building directory
     command: ./config Linux-x86_64-g++ --charm-arch mpi-linux-x86_64
     args:
       chdir: "{{ install_path }}/NAMD_2.11_Source/"
-      #creates: "{{ install_path }}/NAMD_2.11_Source/namd_configure.txt"
       creates: "{{ install_path }}/NAMD_2.11_Source/Linux-x86_64-g++/"
-    #become: yes
 
   - name: Building NAMD_2.11
     make:
       chdir: "{{ install_path }}/NAMD_2.11_Source/Linux-x86_64-g++/"
       target: all
-    #become: yes
 
   - name: Testing NAMD_2.11
     shell: ./namd2 src/alanin >> namd_log.txt
     args:
       chdir: "{{ install_path }}/NAMD_2.11_Source/Linux-x86_64-g++/"
       creates: namd_log.txt 
-    #become: yes
