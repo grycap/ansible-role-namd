@@ -32,3 +32,6 @@
       chdir: /tmp/mpich-3.2/
       creates: /usr/local/lib/libmpi.so
 
+  - name: Set MPI_PATH var
+    set_fact:
+      MPI_PATH: /usr/local/bin/

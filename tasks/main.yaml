@@ -19,20 +19,14 @@
       remote_src: yes
 
   - name: Compile charm-6.7.0 libraries with MPI support
-    shell:
-      env MPICXX=/usr/bin/mpicxx MPICC=/usr/bin/mpicc ./build charm++ mpi-linux-x86_64 --with-production
+    command:
+      ./build charm++ mpi-linux-x86_64 --with-production
     args:
       chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/"
       creates: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/bin"
-    when: ansible_os_family == "Debian"
-
-  - name: Compile charm-6.7.0 libraries with MPI support
-    shell:
-      env MPICXX=/usr/local/bin/mpicxx MPICC=/usr/local/bin/mpicc ./build charm++ mpi-linux-x86_64 --with-production
-    args:
-      chdir: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/"
-      creates: "{{ install_path }}/NAMD_2.11_Source/charm-6.7.0/bin"
-    when: ansible_os_family == "RedHat"
+    environment:
+      MPICXX: "{{ MPI_PATH }}/mpicxx"
+      MPICC: "{{ MPI_PATH }}/mpicc"
 
   - name: Building
     make:
